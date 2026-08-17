@@ -56,22 +56,6 @@ class ClassTile(QToolButton):
             self.delete_requested.emit(self.class_id)
 
 
-class AddClassTile(QToolButton):
-    clicked_add = Signal()
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setText("+ Add\nclass")
-        self.setToolButtonStyle(Qt.ToolButtonTextOnly)
-        self.setFixedSize(112, 112)
-        self.setCursor(Qt.PointingHandCursor)
-        self.setStyleSheet(
-            "QToolButton { border: 2px dashed #5a6072; border-radius: 10px; color: #9aa2b1; }"
-            "QToolButton:hover { border-color: #7c8299; color: #ffffff; }"
-        )
-        self.clicked.connect(self.clicked_add.emit)
-
-
 class SkillCodeCard(QFrame):
     edit_requested = Signal(int)
     delete_requested = Signal(int)

@@ -1,7 +1,13 @@
-"""Default Lost Ark class/subclass list used only to seed an empty database
-on first run. Fully editable afterwards from within the app."""
+"""Master catalog of Lost Ark classes/subclasses known to the app.
 
-DEFAULT_CLASSES = [
+Used both to seed an empty database on first run and as the source list
+for the "Add Class" picker (only classes not already present are offered,
+so there's never a duplicate). This list is intentionally NOT editable
+from the UI: when a new class is released in-game, the app itself needs
+to be updated (add the name here) and re-released.
+"""
+
+ALL_CLASSES = [
     # Warrior
     "Berserker", "Gunlancer", "Paladin", "Slayer", "Destroyer", "Breaker",
     # Martial Artist

@@ -7,7 +7,7 @@ import re
 import sqlite3
 
 from app.paths import get_db_path
-from app.seed_data import DEFAULT_CLASSES
+from app.seed_data import ALL_CLASSES
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -70,7 +70,7 @@ def seed_if_empty(conn: sqlite3.Connection) -> None:
     count = conn.execute("SELECT COUNT(*) FROM classes").fetchone()[0]
     if count:
         return
-    for order, name in enumerate(DEFAULT_CLASSES):
+    for order, name in enumerate(ALL_CLASSES):
         slug = slugify(name)
         conn.execute(
             "INSERT INTO classes (name, slug, icon_filename, sort_order) "
@@ -86,6 +86,54 @@ def list_classes(conn: sqlite3.Connection) -> list[sqlite3.Row]:
     return conn.execute(
         "SELECT * FROM classes ORDER BY is_favorite DESC, sort_order, name"
     ).fetchall()
+
+
+def list_classes_with_codes(conn: sqlite3.Connection) -> list[sqlite3.Row]:
+    """Classes that have at least one saved skill code, used for the home
+    screen so unused classes don't clutter it."""
+    return conn.execute(
+        """
+        SELECT c.* FROM classes c
+        WHERE EXISTS (SELECT 1 FROM skill_codes sc WHERE sc.class_id = c.id)
+        ORDER BY c.is_favorite DESC, c.sort_order, c.name
+        """
+    ).fetchall()
+
+
+def list_available_class_names(conn: sqlite3.Connection) -> list[str]:
+    """Names from the master catalog (ALL_CLASSES) that are either not yet
+    in the database, or already there but with zero saved skill codes (so
+    picking them again is a resume, not a duplicate). Used to populate the
+    "Add Class" picker."""
+    rows = conn.execute(
+        """
+        SELECT c.name, COUNT(sc.id) AS code_count
+        FROM classes c
+        LEFT JOIN skill_codes sc ON sc.class_id = c.id
+        GROUP BY c.id
+        """
+    ).fetchall()
+    code_counts = {row["name"]: row["code_count"] for row in rows}
+    available = [
+        name for name in ALL_CLASSES
+        if code_counts.get(name, 0) == 0
+    ]
+    return sorted(available)
+
+
+def get_class_by_name(conn: sqlite3.Connection, name: str) -> sqlite3.Row | None:
+    return conn.execute(
+        "SELECT * FROM classes WHERE name = ?", (name,)
+    ).fetchone()
+
+
+def get_or_create_class(conn: sqlite3.Connection, name: str) -> int:
+    """Returns the id of the class named `name`, creating it (from the
+    master catalog) if it doesn't exist yet."""
+    row = get_class_by_name(conn, name)
+    if row:
+        return row["id"]
+    return add_class(conn, name)
 
 
 def get_class(conn: sqlite3.Connection, class_id: int) -> sqlite3.Row | None:

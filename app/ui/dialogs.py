@@ -4,6 +4,7 @@ from pathlib import Path
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
+    QComboBox,
     QDialog,
     QDialogButtonBox,
     QFileDialog,
@@ -17,6 +18,45 @@ from PySide6.QtWidgets import (
 
 from app.db import slugify
 from app.paths import get_user_icons_dir, resolve_class_icon
+
+
+class AddClassDialog(QDialog):
+    """Lets the user pick a class to add from the master catalog, instead
+    of typing an arbitrary name — keeps the class list limited to real
+    Lost Ark classes and makes duplicates impossible."""
+
+    def __init__(self, parent=None, available_names: list[str] | None = None):
+        super().__init__(parent)
+        self.setWindowTitle("Add Class")
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.class_combo = QComboBox()
+        self.class_combo.addItems(available_names or [])
+        self.class_combo.currentTextChanged.connect(self._refresh_preview)
+        form.addRow("Class", self.class_combo)
+
+        self.icon_preview = QLabel()
+        self.icon_preview.setFixedSize(64, 64)
+        self._refresh_preview(self.class_combo.currentText())
+        form.addRow("Icon", self.icon_preview)
+
+        layout.addLayout(form)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+
+    def _refresh_preview(self, name: str):
+        icon_filename = f"{slugify(name)}.png" if name else None
+        self.icon_preview.setPixmap(
+            QIcon(str(resolve_class_icon(icon_filename))).pixmap(QSize(64, 64))
+        )
+
+    def get_result(self) -> str:
+        return self.class_combo.currentText()
 
 
 class ClassEditDialog(QDialog):
