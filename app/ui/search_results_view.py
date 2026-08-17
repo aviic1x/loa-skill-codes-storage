@@ -42,18 +42,18 @@ class SearchResultRow(QFrame):
             text_col.addWidget(desc)
         layout.addLayout(text_col, stretch=1)
 
-        self.copy_btn = QPushButton("Copia")
+        self.copy_btn = QPushButton("Copy")
         self.copy_btn.clicked.connect(self._copy_code)
         layout.addWidget(self.copy_btn)
 
-        goto_btn = QPushButton("Vai alla classe")
+        goto_btn = QPushButton("Go to class")
         goto_btn.clicked.connect(lambda: self.go_to_class_requested.emit(self.class_id))
         layout.addWidget(goto_btn)
 
     def _copy_code(self):
         QApplication.clipboard().setText(self.code)
-        self.copy_btn.setText("Copiato!")
-        QTimer.singleShot(1000, lambda: self.copy_btn.setText("Copia"))
+        self.copy_btn.setText("Copied!")
+        QTimer.singleShot(1000, lambda: self.copy_btn.setText("Copy"))
 
 
 class SearchResultsView(QScrollArea):
@@ -78,7 +78,7 @@ class SearchResultsView(QScrollArea):
 
         results = db.search_skill_codes(self.conn, query)
         if not results:
-            empty_label = QLabel("Nessun risultato.")
+            empty_label = QLabel("No results.")
             empty_label.setStyleSheet("color: #9aa2b1;")
             self._layout.addWidget(empty_label)
             return

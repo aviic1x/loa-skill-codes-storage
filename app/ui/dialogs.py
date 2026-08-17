@@ -22,7 +22,7 @@ from app.paths import get_user_icons_dir, resolve_class_icon
 class ClassEditDialog(QDialog):
     def __init__(self, parent=None, name: str = "", icon_filename: str | None = None):
         super().__init__(parent)
-        self.setWindowTitle("Classe")
+        self.setWindowTitle("Class")
         self._icon_filename = icon_filename
         self._new_icon_source: Path | None = None
 
@@ -30,7 +30,7 @@ class ClassEditDialog(QDialog):
         form = QFormLayout()
 
         self.name_edit = QLineEdit(name)
-        form.addRow("Nome", self.name_edit)
+        form.addRow("Name", self.name_edit)
 
         icon_row = QVBoxLayout()
         self.icon_preview = QLabel()
@@ -38,10 +38,10 @@ class ClassEditDialog(QDialog):
         self._refresh_preview()
         icon_row.addWidget(self.icon_preview)
 
-        choose_btn = QPushButton("Scegli icona...")
+        choose_btn = QPushButton("Choose icon...")
         choose_btn.clicked.connect(self._choose_icon)
         icon_row.addWidget(choose_btn)
-        form.addRow("Icona", icon_row)
+        form.addRow("Icon", icon_row)
 
         layout.addLayout(form)
 
@@ -58,7 +58,7 @@ class ClassEditDialog(QDialog):
 
     def _choose_icon(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Scegli icona", "", "Immagini (*.png *.jpg *.jpeg *.ico)"
+            self, "Choose icon", "", "Images (*.png *.jpg *.jpeg *.ico)"
         )
         if path:
             self._new_icon_source = Path(path)
@@ -90,17 +90,17 @@ class SkillCodeEditDialog(QDialog):
         form = QFormLayout()
 
         self.name_edit = QLineEdit(name)
-        form.addRow("Nome", self.name_edit)
+        form.addRow("Name", self.name_edit)
 
         self.description_edit = QPlainTextEdit(description)
         self.description_edit.setFixedHeight(80)
-        form.addRow("Descrizione", self.description_edit)
+        form.addRow("Description", self.description_edit)
 
         self.code_edit = QPlainTextEdit(code)
         code_font = self.code_edit.font()
         code_font.setFamily("Consolas")
         self.code_edit.setFont(code_font)
-        form.addRow("Codice", self.code_edit)
+        form.addRow("Code", self.code_edit)
 
         layout.addLayout(form)
 

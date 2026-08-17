@@ -12,6 +12,6 @@ DEFAULT_CLASSES = [
     "Shadowhunter", "Deathblade", "Souleater",
     # Specialist / Mage
     "Bard", "Sorceress", "Artist", "Aeromancer",
-    # Aggiunte rilevate da lostark.bible (archetipo non verificato)
+    # Added, detected from lostark.bible (archetype not verified)
     "Valkyrie", "Wildsoul", "Guardianknight", "Reaper", "Arcanist", "Summoner",
 ]

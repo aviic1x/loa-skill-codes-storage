@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         top_bar.addWidget(self.home_btn)
 
         self.search_edit = QLineEdit()
-        self.search_edit.setPlaceholderText("Cerca per nome o descrizione...")
+        self.search_edit.setPlaceholderText("Search by name or description...")
         self.search_edit.textChanged.connect(self._on_search_text_changed)
         top_bar.addWidget(self.search_edit, stretch=1)
         outer.addLayout(top_bar)

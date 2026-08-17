@@ -38,13 +38,13 @@ class ClassTile(QToolButton):
     def _show_context_menu(self, pos):
         menu = QMenu(self)
         favorite_action = menu.addAction(
-            "Rimuovi dai preferiti" if self.is_favorite else "Aggiungi ai preferiti"
+            "Remove from favorites" if self.is_favorite else "Add to favorites"
         )
         menu.addSeparator()
-        rename_action = menu.addAction("Rinomina")
-        icon_action = menu.addAction("Cambia icona")
+        rename_action = menu.addAction("Rename")
+        icon_action = menu.addAction("Change icon")
         menu.addSeparator()
-        delete_action = menu.addAction("Elimina")
+        delete_action = menu.addAction("Delete")
         action = menu.exec(self.mapToGlobal(pos))
         if action == favorite_action:
             self.favorite_toggled.emit(self.class_id)
@@ -61,7 +61,7 @@ class AddClassTile(QToolButton):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setText("+ Aggiungi\nclasse")
+        self.setText("+ Add\nclass")
         self.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.setFixedSize(112, 112)
         self.setCursor(Qt.PointingHandCursor)
@@ -97,11 +97,11 @@ class SkillCodeCard(QFrame):
             layout.addWidget(desc_label)
 
         button_row = QHBoxLayout()
-        self.copy_btn = QPushButton("Copia")
+        self.copy_btn = QPushButton("Copy")
         self.copy_btn.clicked.connect(self._copy_code)
-        edit_btn = QPushButton("Modifica")
+        edit_btn = QPushButton("Edit")
         edit_btn.clicked.connect(lambda: self.edit_requested.emit(self.skill_code_id))
-        delete_btn = QPushButton("Elimina")
+        delete_btn = QPushButton("Delete")
         delete_btn.clicked.connect(lambda: self.delete_requested.emit(self.skill_code_id))
 
         button_row.addWidget(self.copy_btn)
@@ -114,5 +114,5 @@ class SkillCodeCard(QFrame):
         from PySide6.QtWidgets import QApplication
 
         QApplication.clipboard().setText(self.code)
-        self.copy_btn.setText("Copiato!")
-        QTimer.singleShot(1000, lambda: self.copy_btn.setText("Copia"))
+        self.copy_btn.setText("Copied!")
+        QTimer.singleShot(1000, lambda: self.copy_btn.setText("Copy"))

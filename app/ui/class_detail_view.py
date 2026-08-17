@@ -40,7 +40,7 @@ class ClassDetailView(QWidget):
         header.addWidget(self.title_label)
         header.addStretch()
 
-        add_btn = QPushButton("+ Aggiungi skill code")
+        add_btn = QPushButton("+ Add skill code")
         add_btn.clicked.connect(self._add_skill_code)
         header.addWidget(add_btn)
 
@@ -107,8 +107,8 @@ class ClassDetailView(QWidget):
     def _delete_skill_code(self, skill_code_id: int):
         answer = QMessageBox.question(
             self,
-            "Elimina skill code",
-            "Eliminare questo skill code?",
+            "Delete skill code",
+            "Delete this skill code?",
             QMessageBox.Yes | QMessageBox.No,
         )
         if answer == QMessageBox.Yes:

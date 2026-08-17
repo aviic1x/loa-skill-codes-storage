@@ -27,14 +27,14 @@ class HomeView(QScrollArea):
         self._container = QWidget()
         outer = QVBoxLayout(self._container)
 
-        self._favorites_label = QLabel("★ Preferiti")
+        self._favorites_label = QLabel("★ Favorites")
         self._favorites_label.setStyleSheet(SECTION_LABEL_STYLE)
         self._favorites_grid_widget = QWidget()
         self._favorites_grid = QGridLayout(self._favorites_grid_widget)
         self._favorites_grid.setSpacing(12)
         self._favorites_grid.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
-        self._others_label = QLabel("Tutte le classi")
+        self._others_label = QLabel("All Classes")
         self._others_label.setStyleSheet(SECTION_LABEL_STYLE)
         self._others_grid_widget = QWidget()
         self._others_grid = QGridLayout(self._others_grid_widget)
@@ -62,7 +62,7 @@ class HomeView(QScrollArea):
         self._favorites_grid_widget.setVisible(bool(favorites))
         self._populate_grid(self._favorites_grid, self._favorites_grid_widget, favorites)
 
-        self._others_label.setText("Altre classi" if favorites else "Tutte le classi")
+        self._others_label.setText("Other Classes" if favorites else "All Classes")
         self._populate_grid(
             self._others_grid, self._others_grid_widget, others, include_add_tile=True
         )
@@ -110,7 +110,7 @@ class HomeView(QScrollArea):
             try:
                 db.add_class(self.conn, name, icon_filename)
             except Exception:
-                QMessageBox.warning(self, "Errore", "Esiste già una classe con questo nome.")
+                QMessageBox.warning(self, "Error", "A class with this name already exists.")
                 return
             self.refresh()
 
@@ -126,7 +126,7 @@ class HomeView(QScrollArea):
             try:
                 db.update_class(self.conn, class_id, name=name, icon_filename=icon_filename)
             except Exception:
-                QMessageBox.warning(self, "Errore", "Esiste già una classe con questo nome.")
+                QMessageBox.warning(self, "Error", "A class with this name already exists.")
                 return
             self.refresh()
 
@@ -139,8 +139,8 @@ class HomeView(QScrollArea):
             return
         answer = QMessageBox.question(
             self,
-            "Elimina classe",
-            f"Eliminare '{class_row['name']}'? Verranno eliminati anche tutti i suoi skill code.",
+            "Delete class",
+            f"Delete '{class_row['name']}'? All of its skill codes will be deleted too.",
             QMessageBox.Yes | QMessageBox.No,
         )
         if answer == QMessageBox.Yes:
